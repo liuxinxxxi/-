@@ -1,0 +1,18 @@
+{
+  "name": "pm-growth-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PM 成长工作台 - 商业/AI 产品经理个人能力训练工具",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,magenta \"npm:dev -w server\" \"npm:dev -w client\"",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
