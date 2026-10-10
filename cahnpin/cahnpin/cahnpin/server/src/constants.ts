@@ -3,7 +3,8 @@
  * 默认厂商为智谱 GLM（OpenAI 兼容协议），用户可在设置页切换。
  */
 
-export const PORT = Number(process.env.PORT ?? 8787)
+// 端口优先级：PORT > FC_SERVER_PORT(阿里云函数计算 Web 函数) > 本地默认 8787
+export const PORT = Number(process.env.PORT ?? process.env.FC_SERVER_PORT ?? 8787)
 
 // 未配置时使用的默认值（均为 OpenAI 兼容端点）
 export const DEFAULT_LLM_CONFIG = {
