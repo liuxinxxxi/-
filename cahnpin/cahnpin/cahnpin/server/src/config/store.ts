@@ -13,14 +13,33 @@ const CONFIG_FILE = path.join(DATA_DIR, 'config.json')
 
 let cache: LlmConfig | null = null
 
-/** 读取配置；文件不存在时返回默认值 */
+/**
+ * 环境变量回退（云端部署场景，如 Render）：
+ * config.json 不存在或字段为空时，从 LLM_API_KEY / LLM_BASE_URL /
+ * LLM_CHAT_MODEL / LLM_EMBEDDING_MODEL 填充。文件中的值优先级更高。
+ */
+function applyEnvFallback(cfg: LlmConfig): LlmConfig {
+  return {
+    provider: cfg.provider || 'zhipu',
+    baseUrl: cfg.baseUrl || process.env.LLM_BASE_URL || DEFAULT_LLM_CONFIG.baseUrl,
+    apiKey: cfg.apiKey || process.env.LLM_API_KEY || '',
+    chatModel: cfg.chatModel || process.env.LLM_CHAT_MODEL || DEFAULT_LLM_CONFIG.chatModel,
+    embeddingModel:
+      cfg.embeddingModel || process.env.LLM_EMBEDDING_MODEL || DEFAULT_LLM_CONFIG.embeddingModel,
+  }
+}
+
+/** 读取配置；文件不存在时返回默认值，再以环境变量补齐空字段 */
 export async function loadConfig(): Promise<LlmConfig> {
   if (cache) return cache
   try {
     const raw = await fs.readFile(CONFIG_FILE, 'utf-8')
-    cache = { ...DEFAULT_LLM_CONFIG, ...(JSON.parse(raw) as Partial<LlmConfig>) }
+    cache = applyEnvFallback({
+      ...DEFAULT_LLM_CONFIG,
+      ...(JSON.parse(raw) as Partial<LlmConfig>),
+    })
   } catch {
-    cache = { ...DEFAULT_LLM_CONFIG }
+    cache = applyEnvFallback({ ...DEFAULT_LLM_CONFIG })
   }
   return cache
 }
