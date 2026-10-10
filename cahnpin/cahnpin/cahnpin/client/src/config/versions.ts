@@ -15,6 +15,14 @@ export type VersionRecord = {
 
 export const VERSION_RECORDS: VersionRecord[] = [
   {
+    seq: 7,
+    date: '2026-10-10',
+    changes: [
+      '新增离线分发支持：前端构建为单文件（所有资源内联），解压后双击 index.html 即可使用，无需安装与部署',
+      'AI 能力由云端服务提供：双击打开（file://）时自动切换 hash 路由并将请求指向云端后端',
+    ],
+  },
+  {
     seq: 6,
     date: '2026-10-09',
     changes: [

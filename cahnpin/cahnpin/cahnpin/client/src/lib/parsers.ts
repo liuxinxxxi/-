@@ -31,7 +31,8 @@ let pdfWorkerReady = false
 async function loadPdfJs() {
   const pdfjsLib = await import('pdfjs-dist')
   if (!pdfWorkerReady) {
-    const workerMod = await import('pdfjs-dist/build/pdf.worker.min.mjs?worker')
+    // inline：worker 以 blob 形式内联，解压双击（file://）打开时也能正常创建
+    const workerMod = await import('pdfjs-dist/build/pdf.worker.min.mjs?worker&inline')
     pdfjsLib.GlobalWorkerOptions.workerPort = new workerMod.default()
     pdfWorkerReady = true
   }

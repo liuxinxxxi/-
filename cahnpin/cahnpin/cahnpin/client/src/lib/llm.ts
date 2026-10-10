@@ -3,7 +3,7 @@
  * - embedTexts：文本向量化（阶段 2）
  * - streamChat：SSE 流式对话（阶段 3 起）
  */
-import { request } from './api'
+import { API_BASE, request } from './api'
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant'
@@ -28,7 +28,7 @@ export async function streamChat(
   messages: ChatMessage[],
   opts: StreamOptions = {},
 ): Promise<string> {
-  const resp = await fetch('/api/chat', {
+  const resp = await fetch(`${API_BASE}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -187,7 +187,7 @@ export async function chatWithSearch(
           ]
         : messages
 
-    const resp = await fetch('/api/chat', {
+    const resp = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: retryHint, stream: false, webSearch: true, temperature: 0.3 }),
@@ -214,7 +214,7 @@ export async function chatCompletion(
   messages: ChatMessage[],
   temperature = 0.3,
 ): Promise<string> {
-  const resp = await fetch('/api/chat', {
+  const resp = await fetch(`${API_BASE}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages, stream: false, temperature }),

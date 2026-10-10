@@ -8,6 +8,9 @@ server/dist
 # Config with sensitive data
 server/data/config.json
 
+# Deployment packages (aliyun-fc-update.zip contains API key, never commit)
+*.zip
+
 # OS
 .DS_Store
 Thumbs.db

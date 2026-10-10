@@ -1,6 +1,12 @@
 /**
  * 与本地 Express 后端交互的轻量封装。
+ * API_BASE：http(s) 部署时为空串（走同源相对路径）；
+ * file:// 双击打开（离线分发包）时指向云端已部署的后端（服务端已开启 CORS）。
  */
+export const API_BASE =
+  window.location.protocol === 'file:'
+    ? 'https://pm-groworkbench-jtljkjlfoa.cn-hangzhou.fcapp.run'
+    : ''
 
 export type PublicLlmConfig = {
   provider: string
@@ -20,7 +26,7 @@ export type LlmConfigPatch = {
 }
 
 export async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const resp = await fetch(url, {
+  const resp = await fetch(API_BASE + url, {
     headers: { 'Content-Type': 'application/json' },
     ...init,
   })
